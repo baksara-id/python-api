@@ -9,8 +9,6 @@ from numpy import asarray
 app = Flask(__name__)
 
 # region API route for image processing
-
-
 @app.route('/scanner', methods=['POST'])
 def process_image():
     # Check if an image file is present in the request
@@ -41,8 +39,6 @@ def process_image():
 # endregion
 
 # region segementation
-
-
 def segmentation(input_image):
     # Convert RGB into Grayscle
     gray_image = cv2.cvtColor(input_image, cv2.COLOR_BGR2GRAY)
@@ -227,8 +223,6 @@ def segmentation(input_image):
 # endregion
 
 # region classification
-
-
 def classification(array_images):
     # Load Model
     model_path = 'baksara_dataset/save_model/model.h5'
@@ -296,8 +290,6 @@ def classification(array_images):
 # endregion
 
 # region transliteration
-
-
 def transliteration(pred_result):
     final_result = []
     num_row = len(pred_result)
