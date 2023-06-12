@@ -8,6 +8,14 @@ from numpy import asarray
 
 app = Flask(__name__)
 
+# Start server
+PORT = 5000
+if __name__ == '__main__':
+    # Uncomment this on production
+    # app.run(port=PORT)
+    # Comment this on production
+    app.run(debug=True, port=PORT)
+
 # region API route for image processing
 @app.route('/scanner', methods=['POST'])
 def process_image():
@@ -351,7 +359,3 @@ def transliteration(pred_result):
         final_result.append(row_result)
     return final_result
 # endregion
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
