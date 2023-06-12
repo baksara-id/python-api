@@ -18,10 +18,10 @@ class Scanner(Resource):
             url : {base_url}/scanner | Method:POST
         '''
         # Check if an image file is present in the request
-        if 'file' not in request.files:
+        if 'image' not in request.files:
             return jsonify({'error': 'No image found'}), 400
 
-        file = request.files['file']
+        file = request.files['image']
 
         # Read the image file
         image = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)  
@@ -37,7 +37,7 @@ class Scanner(Resource):
             # Dilation Function
             def dilate_image(image, kernel_size):
                 # Set the kernel size and sigma
-                sigma = 1.5
+                sigma = 2
                 # Define the kernel for dilation
                 kernel = np.ones((kernel_size, sigma), np.uint8)
                 # Perform dilation
@@ -210,7 +210,7 @@ class Scanner(Resource):
 
         def classification(array_images):
             # Load Model
-            model_path = 'baksara_dataset/save_model/model.h5'
+            model_path = 'save_model/model.h5'
             final_model = keras.models.load_model(model_path)
 
             # Define Class Names
