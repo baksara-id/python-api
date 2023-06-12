@@ -19,7 +19,7 @@ class Scanner(Resource):
         '''
         # Check if an image file is present in the request
         if 'file' not in request.files:
-            return jsonify({'error': 'No file found'}), 400
+            return jsonify({'error': 'No image found'}), 400
 
         file = request.files['file']
 
