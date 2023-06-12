@@ -73,6 +73,7 @@ class Scanner(Resource):
                 return h_segmentation
 
             # Vertical Projectile Profile Function
+            # input_image = dilated_image
 
             def vertical_pp(image):
                 v_projection = np.sum(image, axis=0)
