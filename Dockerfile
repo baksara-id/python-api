@@ -2,7 +2,7 @@ FROM python:3.11.0
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY . .
 
 RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
