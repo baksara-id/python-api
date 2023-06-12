@@ -366,10 +366,10 @@ api.add_resource(Scanner, "/scanner")
 api.add_resource(Kelas, "/kelas")
 
 # Start server
-PORT = 8080
+PORT = 8200
 if __name__ == '__main__':
     # Uncomment this on production
     # app.run(port=PORT)
     # Comment this on production
-    app.run(host='0.0.0.0', port=8080)
+    app.run(debug=True, host='0.0.0.0', port=8200)
     # app.run(debug=True, port=PORT)
