@@ -20,7 +20,7 @@ api.add_resource(Kelas, "/kelas")
 PORT = 8080
 if __name__ == '__main__':
     # Uncomment this on production
-    # app.run(port=PORT)
+    app.run(host='0.0.0.0', port=PORT)
     # Comment this on production
-    app.run(debug=True, host='0.0.0.0', port=PORT)
+    # app.run(debug=True, host='0.0.0.0', port=PORT)
     # app.run(debug=True, port=PORT)
