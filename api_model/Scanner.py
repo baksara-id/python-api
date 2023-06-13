@@ -41,7 +41,8 @@ class Scanner(Resource):
             joined_result = ' '.join(res)
             final_result.append(joined_result)
         response = jsonify(result = final_result)
-        return response
+        print(f"[SCANNER][SELESAI PROSES] : {final_result}")
+        # return response
 
     def dilate_image(self, image, kernel_size):
         # Set the kernel size and sigma

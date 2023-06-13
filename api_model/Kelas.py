@@ -32,7 +32,8 @@ class Kelas(Resource):
         response_prob = self.rules(predku, sorted_ranku, class_input)
         response = jsonify(result=[response_class, response_prob])
         # Code here
-        return response
+        print(f"[KELAS][SELESAI PROSES] : {response_class} {response_prob}")
+        # return response
 
     def PreprocessImageAsArray(self, image, show_output):
         im = image
