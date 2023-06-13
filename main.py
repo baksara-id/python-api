@@ -212,7 +212,11 @@ class Scanner(Resource):
         def classification(array_images):
             # Load Model
             model_path = 'save_model/model.h5'
-            final_model = keras.models.load_model(model_path)
+            final_model = ""
+            try:
+                final_model = keras.models.load_model(model_path)
+            except:
+                raise Exception("Model not found!")
 
             # Define Class Names
             class_names = ['carakan_ba', 'carakan_ca', 'carakan_da', 'carakan_dha', 'carakan_ga', 'carakan_ha',
@@ -335,12 +339,28 @@ class Scanner(Resource):
                 final_result.append(row_result)
             return final_result
 
+        # apa = segmentation(image)
         # Perform segmentation
+        segmentation_result = ""
+        try:
+            segmentation_result = segmentation(image)
+        except Exception as e:
+            return jsonify({'Segmentation error': str(e)}), 500
         segmentation_result = segmentation(image)
+
         # Perform classification
-        classification_result = classification(segmentation_result)
+        classification_result = ""
+        try:
+            classification_result = classification(segmentation_result)
+        except Exception as e:
+            return jsonify({'Classification error': str(e)}), 500
+
         # Perform transliteration
-        transliteration_result = transliteration(classification_result)
+        transliteration_result = ""
+        try:
+            transliteration_result = transliteration(classification_result)
+        except Exception as e:
+            return jsonify({'Transliteration error': str(e)}), 500
 
         final_result = []
         for i, res in enumerate(transliteration_result):
@@ -366,7 +386,7 @@ api.add_resource(Scanner, "/scanner")
 api.add_resource(Kelas, "/kelas")
 
 # Start server
-PORT = 8080
+PORT = 8880
 if __name__ == '__main__':
     # Uncomment this on production
     # app.run(port=PORT)
