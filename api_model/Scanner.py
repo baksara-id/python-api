@@ -40,8 +40,11 @@ class Scanner(Resource):
         for i, res in enumerate(transliteration_result):
             joined_result = ' '.join(res)
             final_result.append(joined_result)
-        response = jsonify(result = final_result)
-        print(f"[SCANNER][SELESAI PROSES] : {final_result}")
+        try:
+            response = jsonify(result = final_result)
+            return response
+        except:
+            raise Exception("jsonify failure")
         # return response
 
     def dilate_image(self, image, kernel_size):
