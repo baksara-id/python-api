@@ -4,6 +4,7 @@ import cv2
 from PIL import Image
 import numpy as np
 import BaksaraConst
+from numpy import asarray
 
 
 class Kelas(Resource):
