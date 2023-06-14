@@ -1,7 +1,7 @@
 from tensorflow import keras
 
-# MODEL_PATH = './save_model/model.h5'
-MODEL_PATH = './api_model/save_model/model.h5'
+MODEL_PATH = './save_model/model.h5'
+# MODEL_PATH = './api_model/save_model/model.h5'
 MODEL = keras.models.load_model(MODEL_PATH)
 
 CLASS_NAMES = ['carakan_ba', 'carakan_ca', 'carakan_da', 'carakan_dha', 'carakan_ga', 'carakan_ha',

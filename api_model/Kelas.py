@@ -4,21 +4,9 @@ import cv2
 from PIL import Image
 import numpy as np
 import api_model.BaksaraConst as BaksaraConst
+# import BaksaraConst as BaksaraConst
 from numpy import asarray
 
-
-# API purpose
-        # if 'image' not in request.files:
-        #     return jsonify({'error': 'No image found'}), 400
-        # file = request.files['image']
-        # class_input = request.form['actual_class']
-        # image = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
-        
-
-
-
-import cv2
-import numpy as np
 
 class Kelas(Resource):
     def __init__(self):
@@ -30,7 +18,11 @@ class Kelas(Resource):
         pred = self.final_model.predict(image_as_array)
         sorted_ranks = np.flip(np.argsort(pred[0]))
         max_index = np.argmax(pred)
-        return pred[max_index], self.class_names[max_index]
+        print(f"index argmax : {max_index}\n\
+            pred : {pred}\n")
+        prob = pred[0][max_index]
+        names = self.class_names[max_index]
+        return prob, names
         
     def post(self):
 
@@ -47,11 +39,11 @@ class Kelas(Resource):
         if image is None:
             raise ValueError("No image found")
 
-        maxclass_prob, maxclass_name = self.prep_predict(image)
-        res_debug = [maxclass_name, maxclass_prob]
+        maxclass_prob, maxclass_name = self.prep_predict_debug(image)
+        maxclass_res = maxclass_name + ' with value ' + str(maxclass_prob)
         response = {
             'class': class_input,
-            'prob': res_debug
+            'prob': maxclass_res
         }
         return response
 

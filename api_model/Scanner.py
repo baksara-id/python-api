@@ -7,7 +7,7 @@ from numpy import asarray
 
 # self defined
 import api_model.BaksaraConst as Baksara
-
+# import BaksaraConst as Baksara
 
 class Scanner(Resource):
     def __init__(self):
