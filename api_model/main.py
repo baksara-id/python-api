@@ -6,8 +6,9 @@ from tensorflow import keras
 from numpy import asarray
 # self lib
 
-from Scanner import Scanner
+# from Scanner import Scanner
 from Kelas import Kelas
+from Scanner import Scanner
 
 app = Flask(__name__)
 api = Api(app)
@@ -19,8 +20,4 @@ api.add_resource(Kelas, "/kelas")
 # Start server
 PORT = 8080
 if __name__ == '__main__':
-    # Uncomment this on production
     app.run(host='0.0.0.0', port=PORT)
-    # Comment this on production
-    # app.run(debug=True, host='0.0.0.0', port=PORT)
-    # app.run(debug=True, port=PORT)

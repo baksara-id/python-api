@@ -1,15 +1,9 @@
-from flask import Flask, request, jsonify
-from flask_restful import Api, Resource
 import cv2
 import numpy as np
 from tensorflow import keras
 from numpy import asarray
-
-# self defined
 import BaksaraConst as Baksara
-
-
-class Scanner(Resource):
+class Scanner():
     def __init__(self):
         self.MODEL = Baksara.MODEL
         self.CLASS_NAMES = Baksara.CLASS_NAMES
@@ -271,21 +265,20 @@ class Scanner(Resource):
             for j in range(num_col):
                 num_img = len(pred_result[i][j])
                 for k in range(num_img):
-                    # print(f"pred result\t:{pred_result[i][j][k].split('_')}")
                     jenis, aksara = pred_result[i][j][k].split('_')
                     if jenis == 'carakan':
                         if probably_o:
-                            if len(temp_o) == 1:
+                            if (len(temp_o) == 1):
                                 temp_o.append(aksara)
-                            elif len(temp_o) == 2:
+                            elif (len(temp_o) == 2):
                                 # Aksara using sandangan e not o
-                                row_result.append(temp_o[1][:-1] + temp_o[0])
+                                row_result.append(temp_o[1][:-1] + temp_o[0] )                            
                                 probably_o = False
                                 temp_o = []
                                 row_result.append(aksara)
-                            elif len(temp_o) == 3 and temp_o[-1] in ['h', 'ng', 'r']:
+                            elif (len(temp_o) == 3) and (temp_o[-1] in ['h', 'ng', 'r']):
                                 # sandhangan è using 'h', 'ng', 'r'
-                                row_result.append(temp_o[1][:-1] + temp_o[0] + temp_o[2])
+                                row_result.append(temp_o[1][:-1] + temp_o[0] + temp_o[2])                            
                                 probably_o = False
                                 temp_o = []
                                 row_result.append(aksara)
@@ -300,42 +293,39 @@ class Scanner(Resource):
                             temp_o.append('è')
                         # tarung 'o'
                         elif aksara == 'o':
-                            if probably_o and len(temp_o) == 2:
-                                row_result.append(temp_o[1][:-1] + aksara)
-                                probably_o = False
-                                temp_o = []
-                            # Terdeteksi o namun tidak ada taling, kemungkinan missclassify h
+                            if probably_o:
+                                if (len(temp_o) == 2):
+                                    row_result.append(temp_o[1][:-1] + aksara )                            
+                                    probably_o = False
+                                    temp_o = []
+                            # Terdeteksi o namun tidak ada taling, kemungkinan missclasify h
                             else:
-                                row_result.append('h')
+                                row_result[-1] = row_result[-1] + 'h'
                         # e, i, u
-                        elif aksara in ['e', 'i', 'u']:
-                            if row_result:
-                                row_result[-1] = row_result[-1][:-1] + aksara
+                        elif (aksara == 'e') or (aksara == 'i') or (aksara == 'u'):
+                            row_result[-1] = row_result[-1][:-1] + aksara
                         # h, ng, r
                         else:
-                            if probably_o and len(temp_o) == 2:
-                                temp_o.append(aksara)
-                            elif row_result:
+                            if (probably_o):
+                                if (len(temp_o) == 2):
+                                    temp_o.append(aksara)
+                            else:
                                 row_result[-1] = row_result[-1] + aksara
-            final_result.append(row_result)
+            final_result.append(row_result)    
         return final_result
-
-    def post(self):
-        if 'image' not in request.files:
-            response = {
-                'error' : 'no image found'
-            }
-            return response
-        file = request.files['image']
-
-        image = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
-
-        segmentation_result = self.segmentation(image)
+    def post(self, input_image = None):
+        segmentation_result = self.segmentation(input_image)
         classification_result = self.classification(segmentation_result)
         transliteration_result = self.transliteration(classification_result)
-
         print(transliteration_result)
-        response = {
-            "result" : transliteration_result
-        }
-        return response
+
+
+# Create an instance of the Scanner class
+scanner_instance = Scanner()
+
+# Load an image
+image_path = "../kura_2.png"
+image = cv2.imread(image_path)
+
+# Call the post method
+scanner_instance.post(input_image=image)
