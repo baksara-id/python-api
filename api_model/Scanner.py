@@ -329,10 +329,31 @@ class Scanner(Resource):
         file = request.files['image']
 
         image = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
+        segmentation_result = None
 
-        segmentation_result = self.segmentation(image)
-        classification_result = self.classification(segmentation_result)
-        transliteration_result = self.transliteration(classification_result)
+        try:
+            segmentation_result = self.segmentation(image)
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            response = { "error": "image segmentation fault" }
+            return response
+        
+        classification_result = None
+        try:
+            classification_result = self.classification(segmentation_result)
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            response = { "error": "classification fault" }
+            return response
+        
+        transliteration_result = None
+        try:
+            transliteration_result = self.transliteration(classification_result)
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            response = { "error": "transliteration fault" }
+            return response
+        
 
         print(transliteration_result)
         response = {
