@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY ./api_model/* .
+COPY ./api_model/* ./
 
 EXPOSE 8080
 
