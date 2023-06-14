@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip install --no-cache-dir -r requirements.txt
 
+WORKDIR /app/api_model
+
 COPY main.py .
 
 EXPOSE 8080
