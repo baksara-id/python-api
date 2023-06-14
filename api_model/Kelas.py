@@ -25,6 +25,13 @@ class Kelas(Resource):
         self.class_names = BaksaraConst.CLASS_NAMES
         self.final_model = BaksaraConst.MODEL
 
+    def prep_predict_debug(self, image):
+        image_as_array = self.PreprocessImageAsArray(image, show_output=False)
+        pred = self.final_model.predict(image_as_array)
+        sorted_ranks = np.flip(np.argsort(pred[0]))
+        max_index = np.argmax(pred)
+        return pred[max_index], self.class_names[max_index]
+        
     def post(self):
 
         if 'image' not in request.files:
@@ -40,12 +47,21 @@ class Kelas(Resource):
         if image is None:
             raise ValueError("No image found")
 
+        maxclass_prob, maxclass_name = self.prep_predict(image)
+        res_debug = [maxclass_name, maxclass_prob]
+        response = {
+            'class': class_input,
+            'prob': res_debug
+        }
+        return response
+
         try:
             predku, sorted_ranku = self.prep_predict(image)
             response_class = class_input
             response_prob = self.rules(predku, sorted_ranku, class_input)
             print(f"[KELAS][SELESAI PROSES]: {response_class} {response_prob}")
             # Rest of the code
+            # index_max = 
             response = {
             'class': response_class,
             'prob': str(response_prob)

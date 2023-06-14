@@ -60,10 +60,22 @@ class Kelas:
             rank += 1
         return class_input, pred[0][inputted_class_rank]
 
+    def prep_predict_debug(self, image):
+        image_as_array = self.PreprocessImageAsArray(image, show_output=False)
+        pred = self.final_model.predict(image_as_array)
+        sorted_ranks = np.flip(np.argsort(pred[0]))
+        max_index = np.argmax(pred)
+        return pred[max_index], self.class_names[max_index]
     def prep_predict(self, image):
         image_as_array = self.PreprocessImageAsArray(image, show_output=False)
         pred = self.final_model.predict(image_as_array)
         sorted_ranks = np.flip(np.argsort(pred[0]))
+        print(f"\n\nprep_predict\n \
+            pred\t: {pred}\n \
+            sorted_ranks\t:{sorted_ranks}")
+        max_index = np.argmax(pred)
+        print(f"max index\t: {max_index}\n\
+            max class\t: {self.class_names[max_index]}\n\n")
         return pred, sorted_ranks
 
     def rules(self, pred, sorted_rank, class_input):
@@ -137,7 +149,7 @@ class Kelas:
 kelas_instance = Kelas()
 
 # Load an image
-image_path = "./87.jpg"
+image_path = "../87.jpg"
 image = cv2.imread(image_path)
 
 # Specify the input class
