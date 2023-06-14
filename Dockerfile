@@ -10,11 +10,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY ./api_model/BaksaraConst.py .
-COPY ./api_model/Kelas.py .
-COPY ./api_model/main.py .
-COPY ./api_model/Scanner.py .
-COPY ./save_model/model.h5 .
+COPY ./api_model/* .
 
 EXPOSE 8080
 
