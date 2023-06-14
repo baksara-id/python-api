@@ -6,7 +6,7 @@ from tensorflow import keras
 from numpy import asarray
 
 # self defined
-import BaksaraConst as Baksara
+import api_model.BaksaraConst as Baksara
 
 
 class Scanner(Resource):

@@ -7,8 +7,8 @@ from numpy import asarray
 # self lib
 
 # from Scanner import Scanner
-from Kelas import Kelas
-from Scanner import Scanner
+from api_model.Kelas import Kelas
+from api_model.Scanner import Scanner
 
 app = Flask(__name__)
 api = Api(app)

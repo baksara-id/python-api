@@ -3,7 +3,7 @@ from flask_restful import Api, Resource
 import cv2
 from PIL import Image
 import numpy as np
-import BaksaraConst
+import api_model.BaksaraConst as BaksaraConst
 from numpy import asarray
 
 
