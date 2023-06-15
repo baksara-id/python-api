@@ -390,6 +390,7 @@ class Scanner(Resource):
 
         _, binary_image = cv2.threshold(gray_image, bottom, top, cv2.THRESH_BINARY)
         image = binary_image
+        image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
 
         
         segmentation_result = None
