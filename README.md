@@ -52,7 +52,6 @@
 
 Aksara Jawa Image Scanner & Classification is an API service built using python to classify and translate images containing letters, words, or sentences written using Javanese script. This service is deployed using Cloud Run and used in the scan feature and module in the Baksara application. This API has two endpoints, namely /scanner and /class.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
@@ -126,7 +125,14 @@ To use locally, you need to modify some lines on some files. Here are the guide 
    ```sh
    python main.py
    ```
-2. Test endpoint in Postman : 
+2. Available endpoint :
+   ```sh
+   http://localhost:{PORT}/scanner
+   ```
+   ```sh
+   http://localhost:{PORT}/kelas
+   ```
+3. Test endpoint in Postman : 
 
 
 
@@ -151,7 +157,7 @@ To use locally, you need to modify some lines on some files. Here are the guide 
    ```sh
    https://python-api-qohpfhypea-et.a.run.app/kelas
    ```
-4. Test endpoint in Postman :
+3. Test endpoint in Postman :
 
 
 
