@@ -23,7 +23,62 @@ class Kelas(Resource):
         prob = pred[0][max_index]
         names = self.class_names[max_index]
         return prob, names
-        
+
+    def fit_image(self, imagez = None, def_offset = 10 ):
+        contours, _ = cv2.findContours(imagez, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cx1 = []
+        cy1 = []
+        cx2 = []
+        cy2 = []
+        for contour in contours:
+            # Get the bounding rectangle coordinates
+            x, y, w, h = cv2.boundingRect(contour)
+            cx1.append(x)
+            cy1.append(y)
+            cx2.append(x+w)
+            cy2.append(y+h)
+            # Draw a rectangle around the contour
+            # cv2.rectangle(image_with_rectangles, (x, y), (x+w, y+h), (255, 255, 0), 2)
+
+        myx1 = min(cx1)
+        myy1 = min(cy1)
+        myx2 = max(cx2)
+        myy2 = max(cy2)
+        # cv2.rectangle(image_with_rectangles, (myx1, myy1), (myx2, myy2), (0, 255, 0), 2)
+        # Read the image to be processed
+        to_process = imagez[myy1:myy2, myx1:myx2]
+
+        # Calculate the new size with aspect ratio preserved
+        max_size = 128 - 2 * def_offset
+        height, width = to_process.shape[:2]
+
+        if height > width:
+            new_height = max_size
+            ratio = new_height / height
+            new_width = int(width * ratio)
+            offset_x = def_offset
+            offset_y = int((128 - new_height) / 2)
+        else:
+            new_width = max_size
+            ratio = new_width / width
+            new_height = int(height * ratio)
+            offset_x = int((128 - new_width) / 2)
+            offset_y = def_offset
+
+        # Resize the image with the calculated size
+        resized_image = cv2.resize(to_process, (new_width, new_height))
+
+        # Create the canvas with padding
+        canvas = np.zeros((128, 128), dtype=np.uint8)
+
+        # calculate the x middle
+        # 128 / 2 = 64
+        x_start = 64-new_width//2
+        y_start = 64-new_height//2
+        canvas[y_start:y_start+new_height, x_start:x_start+new_width] = resized_image
+        canvas = cv2.bitwise_not(canvas)
+        return canvas
+
     def post(self):
 
         if 'image' not in request.files:
@@ -34,10 +89,10 @@ class Kelas(Resource):
         file = request.files['image']
         class_input = request.form['actual_class']
 
-        image = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
+        gray_image = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_GRAYSCALE)
+        _, binary_image = cv2.threshold(gray_image, 150, 255, cv2.THRESH_BINARY_INV)
+        image = self.fit_image(imagez=binary_image, def_offset=10)
 
-        if image is None:
-            raise ValueError("No image found")
 
         # maxclass_prob, maxclass_name = self.prep_predict_debug(image)
         # maxclass_res = maxclass_name + ' with value ' + str(maxclass_prob)
@@ -46,6 +101,7 @@ class Kelas(Resource):
         #     'prob': maxclass_res
         # }
         # return response
+
 
         try:
             predku, sorted_ranku = self.prep_predict(image)
