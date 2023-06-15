@@ -116,7 +116,7 @@ class Kelas(Resource):
             
             response = {
             'class': response_class,
-            'prob': str(response_prob) + ' debug mode'
+            'prob': str(response_prob)
             }
             return response
             
