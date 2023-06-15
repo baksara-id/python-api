@@ -39,13 +39,13 @@ class Kelas(Resource):
         if image is None:
             raise ValueError("No image found")
 
-        maxclass_prob, maxclass_name = self.prep_predict_debug(image)
-        maxclass_res = maxclass_name + ' with value ' + str(maxclass_prob)
-        response = {
-            'class': class_input,
-            'prob': maxclass_res
-        }
-        return response
+        # maxclass_prob, maxclass_name = self.prep_predict_debug(image)
+        # maxclass_res = maxclass_name + ' with value ' + str(maxclass_prob)
+        # response = {
+        #     'class': class_input,
+        #     'prob': maxclass_res
+        # }
+        # return response
 
         try:
             predku, sorted_ranku = self.prep_predict(image)
@@ -56,7 +56,7 @@ class Kelas(Resource):
             # index_max = 
             response = {
             'class': response_class,
-            'prob': str(response_prob)
+            'prob': str(response_prob) + ' debug mode'
             }
             return response
             
@@ -89,71 +89,100 @@ class Kelas(Resource):
 
     def rules(self, pred, sorted_rank, class_input):
         res = []
+        # FIRST
         if class_input == 'carakan_ha':
-            res1 = self.take_class(pred, sorted_rank, 'carakan_ha') or ('null', 0.0)
-            res.append(res1)
-            res2 = self.take_class(pred, sorted_rank, 'carakan_ta') or ('null', 0.0)
-            res.append(res2)
+            res_buff = self.take_class(pred, sorted_rank, class_input)
+            res.append(res_buff)
+            res_buff = self.take_class(pred, sorted_rank, 'carakan_la')
+            res.append(res_buff)
             highest_tuple = max(res, key=lambda x: x[1])
             return highest_tuple[1]
 
-        # elif class_input == 'pasangan_ra' or class_input == 'carakan_ra':
-        #     res1 = self.take_class(pred, sorted_rank, 'pasangan_ra') or ('null', 0.0)
-        #     res.append(res1)
-        #     res2 = self.take_class(pred, sorted_rank, 'carakan_ra') or ('null', 0.0)
-        #     res.append(res2)
-        #     highest_tuple = max(res, key=lambda x: x[1])
-        #     return highest_tuple[1]
+        elif class_input == 'carakan_na':
+            res_buff = self.take_class(pred, sorted_rank, class_input)
+            res.append(res_buff)
+            res_buff = self.take_class(pred, sorted_rank, 'carakan_ka')
+            res.append(res_buff)
+            highest_tuple = max(res, key=lambda x: x[1])
+            return highest_tuple[1]
 
-        # elif class_input == 'pasangan_ga' or class_input == 'carakan_ga':
-        #     res1 = self.take_class(pred, sorted_rank, 'pasangan_ga') or ('null', 0.0)
-        #     res.append(res1)
-        #     res2 = self.take_class(pred, sorted_rank, 'carakan_ga') or ('null', 0.0)
-        #     res.append(res2)
-        #     highest_tuple = max(res, key=lambda x: x[1])
-        #     return highest_tuple[1]
+        elif class_input == 'carakan_ca':
+            res_buff = self.take_class(pred, sorted_rank, class_input)
+            res.append(res_buff)
+            res_buff = self.take_class(pred, sorted_rank, 'carakan_sa')
+            res.append(res_buff)
+            highest_tuple = max(res, key=lambda x: x[1])
+            return highest_tuple[1]
 
-        # elif class_input == 'pasangan_ya' or class_input == 'carakan_ya':
-        #     res1 = self.take_class(pred, sorted_rank, 'pasangan_ya') or ('null', 0.0)
-        #     res.append(res1)
-        #     res2 = self.take_class(pred, sorted_rank, 'carakan_ya') or ('null', 0.0)
-        #     res.append(res2)
-        #     highest_tuple = max(res, key=lambda x: x[1])
-        #     return highest_tuple[1]
+        elif class_input == 'carakan_ra':
+            res_buff = self.take_class(pred, sorted_rank, class_input)
+            res.append(res_buff)
+            res_buff = self.take_class(pred, sorted_rank, 'sandhangan_e2')
+            res.append(res_buff)
+            highest_tuple = max(res, key=lambda x: x[1])
+            return highest_tuple[1]
+        # SECOND
+        elif class_input == 'carakan_da':
+            res_buff = self.take_class(pred, sorted_rank, class_input)
+            res.append(res_buff)
+            res_buff = self.take_class(pred, sorted_rank, 'carakan_sa')
+            res.append(res_buff)
+            res_buff = self.take_class(pred, sorted_rank, 'carakan_ya')
+            res.append(res_buff)
+            highest_tuple = max(res, key=lambda x: x[1])
+            return highest_tuple[1]
+        elif class_input == 'carakan_sa':
+            res_buff = self.take_class(pred, sorted_rank, class_input)
+            res.append(res_buff)
+            res_buff = self.take_class(pred, sorted_rank, 'carakan_ya')
+            res.append(res_buff)
+            highest_tuple = max(res, key=lambda x: x[1])
+            return highest_tuple[1]
 
-        # elif class_input == 'pasangan_nga' or class_input == 'carakan_nga':
-        #     res1 = self.take_class(pred, sorted_rank, 'pasangan_nga') or ('null', 0.0)
-        #     res.append(res1)
-        #     res2 = self.take_class(pred, sorted_rank, 'carakan_nga') or ('null', 0.0)
-        #     res.append(res2)
-        #     highest_tuple = max(res, key=lambda x: x[1])
-        #     return highest_tuple[1]
-        
-        # elif class_input == 'sandhangan_e' or class_input == 'pasangan_wa':
-        #     res1 = self.take_class(pred, sorted_rank, 'sandhangan_e') or ('null', 0.0)
-        #     res.append(res1)
-        #     res2 = self.take_class(pred, sorted_rank, 'pasangan_wa') or ('null', 0.0)
-        #     res.append(res2)
-        #     highest_tuple = max(res, key=lambda x: x[1])
-        #     return highest_tuple[1]
-        
-        # elif class_input == 'pasangan_dha':
-        #     res1 = self.take_class(pred, sorted_rank, 'pasangan_dha') or ('null', 0.0)
-        #     res.append(res1)
-        #     res2 = self.take_class(pred, sorted_rank, 'pasangan_tha') or ('null', 0.0)
-        #     res.append(res2)
-        #     highest_tuple = max(res, key=lambda x: x[1])
-        #     return highest_tuple[1]
-        
-        # elif class_input == 'pasangan_ma' or class_input == 'sandhangan_ng':
-        #     res1 = self.take_class(pred, sorted_rank, 'pasangan_ma') or ('null', 0.0)
-        #     res.append(res1)
-        #     res2 = self.take_class(pred, sorted_rank, 'sandhangan_ng') or ('null', 0.0)
-        #     res.append(res2)
-        #     highest_tuple = max(res, key=lambda x: x[1])
-        #     return highest_tuple[1]
+        # THIRD
+        elif class_input == 'carakan_pa':
+            res_buff = self.take_class(pred, sorted_rank, class_input)
+            res.append(res_buff)
+            res_buff = self.take_class(pred, sorted_rank, 'carakan_la')
+            res.append(res_buff)
+            res_buff = self.take_class(pred, sorted_rank, 'carakan_ya')
+            res.append(res_buff)
+            highest_tuple = max(res, key=lambda x: x[1])
+            return highest_tuple[1]
+
+        elif class_input == 'carakan_dha':
+            res_buff = self.take_class(pred, sorted_rank, class_input)
+            res.append(res_buff)
+            res_buff = self.take_class(pred, sorted_rank, 'carakan_ca')
+            res.append(res_buff)
+            res_buff = self.take_class(pred, sorted_rank, 'carakan_ka')
+            res.append(res_buff)
+            highest_tuple = max(res, key=lambda x: x[1])
+            return highest_tuple[1]
+
+        # FOURTH
+        elif class_input == 'carakan_ba':
+            res_buff = self.take_class(pred, sorted_rank, class_input)
+            res.append(res_buff)
+            res_buff = self.take_class(pred, sorted_rank, 'carakan_ta')
+            res.append(res_buff)
+            res_buff = self.take_class(pred, sorted_rank, 'carakan_nya')
+            res.append(res_buff)
+            highest_tuple = max(res, key=lambda x: x[1])
+            return highest_tuple[1]
+
+        elif class_input == 'carakan_nga':
+            res_buff = self.take_class(pred, sorted_rank, class_input)
+            res.append(res_buff)
+            res_buff = self.take_class(pred, sorted_rank, 'carakan_ma')
+            res.append(res_buff)
+            res_buff = self.take_class(pred, sorted_rank, 'carakan_ba')
+            res.append(res_buff)
+            highest_tuple = max(res, key=lambda x: x[1])
+            return highest_tuple[1]
+
         else:
-            res1 = self.take_class(pred, sorted_rank, class_input)
-            res.append(res1)
+            res_buff = self.take_class(pred, sorted_rank, class_input)
+            res.append(res_buff)
             highest_tuple = max(res, key=lambda x: x[1])
             return highest_tuple[1]
