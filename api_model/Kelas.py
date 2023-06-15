@@ -90,9 +90,10 @@ class Kelas(Resource):
         class_input = request.form['actual_class']
 
         gray_image = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_GRAYSCALE)
-        _, binary_image = cv2.threshold(gray_image, 150, 255, cv2.THRESH_BINARY_INV)
-        image = self.fit_image(imagez=binary_image, def_offset=10)
+        _, binary_image = cv2.threshold(gray_image, 250, 255, cv2.THRESH_BINARY_INV)
 
+        image = self.fit_image(binary_image, 10)
+        
 
         # maxclass_prob, maxclass_name = self.prep_predict_debug(image)
         # maxclass_res = maxclass_name + ' with value ' + str(maxclass_prob)
