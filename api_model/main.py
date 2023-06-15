@@ -6,7 +6,7 @@ from tensorflow import keras
 from numpy import asarray
 # self lib
 
-# from Scanner import Scanner
+
 from api_model.Kelas import Kelas
 from api_model.Scanner import Scanner
 

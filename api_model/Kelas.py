@@ -77,6 +77,7 @@ class Kelas(Resource):
         y_start = 64-new_height//2
         canvas[y_start:y_start+new_height, x_start:x_start+new_width] = resized_image
         canvas = cv2.bitwise_not(canvas)
+        canvas = cv2.cvtColor(canvas, cv2.COLOR_GRAY2RGB)
         return canvas
 
     def post(self):
