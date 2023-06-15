@@ -388,8 +388,8 @@ class Scanner(Resource):
         bottom = 80
         top = 255
 
-        _, binary_image = cv2.threshold(gray_image, bottom, top, cv2.THRESH_BINARY_INV)
-        image = self.fit_image(binary_image, 18)
+        _, binary_image = cv2.threshold(gray_image, bottom, top, cv2.THRESH_BINARY)
+        image = binary_image
 
         
         segmentation_result = None
