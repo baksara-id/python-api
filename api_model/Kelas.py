@@ -189,6 +189,15 @@ class Kelas(Resource):
             res.append(res_buff)
             highest_tuple = max(res, key=lambda x: x[1])
             return highest_tuple[1]
+        
+        elif class_input == 'carakan_ta':
+            res_buff = self.take_class(pred, sorted_rank, class_input)
+            res.append(res_buff)
+            res_buff = self.take_class(pred, sorted_rank, 'carakan_ya')
+            res.append(res_buff)
+            highest_tuple = max(res, key=lambda x: x[1])
+            return highest_tuple[1]
+
         elif class_input == 'carakan_sa':
             res_buff = self.take_class(pred, sorted_rank, class_input)
             res.append(res_buff)
@@ -196,6 +205,15 @@ class Kelas(Resource):
             res.append(res_buff)
             highest_tuple = max(res, key=lambda x: x[1])
             return highest_tuple[1]
+
+        elif class_input == 'carakan_la':
+            res_buff = self.take_class(pred, sorted_rank, class_input)
+            res.append(res_buff)
+            res_buff = self.take_class(pred, sorted_rank, 'carakan_ya')
+            res.append(res_buff)
+            highest_tuple = max(res, key=lambda x: x[1])
+            return highest_tuple[1]
+
 
         # THIRD
         elif class_input == 'carakan_pa':
@@ -214,6 +232,8 @@ class Kelas(Resource):
             res_buff = self.take_class(pred, sorted_rank, 'carakan_ca')
             res.append(res_buff)
             res_buff = self.take_class(pred, sorted_rank, 'carakan_ka')
+            res.append(res_buff)
+            res_buff = self.take_class(pred, sorted_rank, 'carakan_ta')
             res.append(res_buff)
             highest_tuple = max(res, key=lambda x: x[1])
             return highest_tuple[1]
