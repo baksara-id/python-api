@@ -96,13 +96,13 @@ class Kelas(Resource):
         image = self.fit_image(binary_image, 10)
         
 
-        # maxclass_prob, maxclass_name = self.prep_predict_debug(image)
-        # maxclass_res = maxclass_name + ' with value ' + str(maxclass_prob)
-        # response = {
-        #     'class': class_input,
-        #     'prob': maxclass_res
-        # }
-        # return response
+        maxclass_prob, maxclass_name = self.prep_predict_debug(image)
+        maxclass_res = maxclass_name + ' with value ' + str(maxclass_prob)
+        response = {
+            'class': class_input,
+            'prob': maxclass_res
+        }
+        return response
 
 
         try:
