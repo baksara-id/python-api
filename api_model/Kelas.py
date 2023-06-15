@@ -95,23 +95,25 @@ class Kelas(Resource):
 
         image = self.fit_image(binary_image, 10)
         
-
-        maxclass_prob, maxclass_name = self.prep_predict_debug(image)
-        maxclass_res = maxclass_name + ' with value ' + str(maxclass_prob)
-        response = {
-            'class': class_input,
-            'prob': maxclass_res
-        }
-        return response
+        # try:
+        #     maxclass_prob, maxclass_name = self.prep_predict_debug(image)
+        #     maxclass_res = maxclass_name + ' with value ' + str(maxclass_prob)
+        #     response = {
+        #         'class': class_input,
+        #         'prob': maxclass_res
+        #     }
+        #     return response
+        # except:
+        #     response = { "error" : f"An error occurred: {str(e)}"}
+        #     return response
 
 
         try:
             predku, sorted_ranku = self.prep_predict(image)
             response_class = class_input
             response_prob = self.rules(predku, sorted_ranku, class_input)
-            print(f"[KELAS][SELESAI PROSES]: {response_class} {response_prob}")
-            # Rest of the code
-            # index_max = 
+            # print(f"[KELAS][SELESAI PROSES]: {response_class} {response_prob}")
+            
             response = {
             'class': response_class,
             'prob': str(response_prob) + ' debug mode'
@@ -121,6 +123,10 @@ class Kelas(Resource):
         except Exception as e:
             print(f"An error occurred: {str(e)}")
             # Handle the error condition appropriately
+            response = {
+            'error' : f"An error occurred: {str(e)}"
+            }
+            return response
 
     def PreprocessImageAsArray(self, image, show_output=False):
         im = cv2.resize(image, (128, 128))
