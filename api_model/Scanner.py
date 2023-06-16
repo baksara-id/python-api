@@ -9,6 +9,7 @@ from numpy import asarray
 import api_model.BaksaraConst as Baksara
 # import BaksaraConst as Baksara
 
+   
 class Scanner(Resource):
     def __init__(self):
         self.MODEL = Baksara.MODEL
@@ -24,61 +25,61 @@ class Scanner(Resource):
         return dilated_image
 
     # Horizontal Projectile Profile Function
-    def horizontal_pp(self, target_image, input_image, threshold):
-        h_projection = np.sum(input_image, axis=1)
+    def horizontal_pp(self, image_2, image, threshold):
+        start_putih = []
+        end_putih = []
+        h_projection = np.sum(image, axis=1)
+        # print(h_projection)
+        for x in range(len(h_projection)):
+            if h_projection[x] > threshold:
+                if len(start_putih) == len(end_putih):
+                    start_putih.append(x)
+            else:
+                if len(start_putih) == (len(end_putih)+1):
+                    end_putih.append(x)
+        if(len(start_putih) == len(end_putih)+1):
+            end_putih.append(len(h_projection))
+
+        h_segmentation = []
+        for x in range(len(start_putih)):
+            t = image_2[start_putih[x]:end_putih[x],:]
+            h_segmentation.append(t)
+        return h_segmentation
+
+    # Vertical Projectile Profile Function
+    def vertical_pp(self,image):
+        # Step b: Buat histogram vertical
+        v_projection = np.sum(image, axis=0)
 
         start_putih = []
         end_putih = []
 
-        h_segmentation = []
-        for x, value in enumerate(h_projection):
-            if value > threshold:
+        for x in range(len(v_projection)):
+            if v_projection[x] > 0:
                 if len(start_putih) == len(end_putih):
                     start_putih.append(x)
             else:
-                if len(start_putih) == (len(end_putih) + 1):
+                if len(start_putih) == (len(end_putih)+1):
                     end_putih.append(x)
+        if(len(start_putih) == len(end_putih)+1):
+            end_putih.append(len(v_projection))
+        
+        v_segmentation = []
+        for x in range(len(start_putih)):
+            t = image[:, start_putih[x]:end_putih[x]]
+            v_segmentation.append(t)
 
-        if len(start_putih) == len(end_putih) + 1:
-            end_putih.append(len(h_projection))
-
-        for start, end in zip(start_putih, end_putih):
-            t = target_image[start:end, :]
-            h_segmentation.append(t)
-
-        return h_segmentation
-
-    # Vertical Projectile Profile Function
-    def vertical_pp(self, image):
-            v_projection = np.sum(image, axis=0)
-
-            start_putih = []
-            end_putih = []
-
-            v_segmentation = []
-            for x, value in enumerate(v_projection):
-                if value > 0:
-                    if len(start_putih) == len(end_putih):
-                        start_putih.append(x)
-                else:
-                    if len(start_putih) == (len(end_putih) + 1):
-                        end_putih.append(x)
-
-            if len(start_putih) == len(end_putih) + 1:
-                end_putih.append(len(v_projection))
-
-            for start, end in zip(start_putih, end_putih):
-                t = image[:, start:end]
-                v_segmentation.append(t)
-
-            return v_segmentation
+        return v_segmentation
 
 
     # Image to canvas function
-    def image_to_canfas(self, image):
+    def image_to_canfas(self,image):
+        # Read the image to be processed
+        to_process = image
+
         # Calculate the new size with aspect ratio preserved
         max_size = 128 - 2 * 18
-        height, width = image.shape[:2]
+        height, width = to_process.shape[:2]
 
         if height > width:
             new_height = max_size
@@ -94,27 +95,31 @@ class Scanner(Resource):
             offset_y = 18
 
         # Resize the image with the calculated size
-        resized_image = cv2.resize(image, (new_width, new_height))
+        resized_image = cv2.resize(to_process, (new_width, new_height))
+
         # Create the canvas with padding
         canvas = np.zeros((128, 128), dtype=np.uint8)
+
         # calculate the x middle
         # 128 / 2 = 64
         x_start = 64-new_width//2
         y_start = 64-new_height//2
         canvas[y_start:y_start+new_height, x_start:x_start+new_width] = resized_image
+
         return canvas
 
 
     def segmentation(self, input_image):
         # Convert RGB into Grayscle
         gray_image = cv2.cvtColor(input_image, cv2.COLOR_BGR2GRAY)
+        
 
         # Convert Grayscale into Binary Image
         _, threshold_image = cv2.threshold(gray_image, 150, 255, cv2.THRESH_BINARY_INV)
         
         # Negative transformation    
         binary_image = cv2.bitwise_not(threshold_image)
-
+        
         
 
         # Perform Dilation
@@ -123,23 +128,27 @@ class Scanner(Resource):
 
         # FIRST HORIZONTAL PP
         h1_segmentation = self.horizontal_pp(threshold_image,dilated_image,  0)
+        print(f"Horizontal 1 : {len(h1_segmentation)}\n")
+
+        
+        # mymultiplot(h1_segmentation, 1)
+        # CHECK DONE SAMPAI SINI
         # Remove empty segments at the beginning and end (if any)
         h1_segmentation = [region for region in h1_segmentation if np.sum(region) > 0]
-
+        # mymultiplot(h1_segmentation, 1)
+        
         # FIRST VERTICAL PP
         h1_regions = len(h1_segmentation)
         v1_segmentation = []
-        for i in range(h1_regions):
-            v_segmentation = self.vertical_pp(h1_segmentation[i])
-            # Remove empty segments at the beginning and end (if any)
-            v_segmentation = [region for region in v_segmentation if np.sum(region) > 0]
-
-            v1_segmentation.append(v_segmentation)
+        for image in h1_segmentation:
+            temp_im = self.vertical_pp(image)
+            temp_im = [region for region in temp_im if np.sum(region) > 0]
+            v1_segmentation.append(temp_im)
         
         # SECOND HORIZONTAL PP
         v1_regions = len(v1_segmentation)
         h2_segmentation = []
-        tebal_px = 13
+        tebal_px = 20
         h2_treshold = int(255 * tebal_px)
 
         for i in range(v1_regions):
@@ -375,7 +384,7 @@ class Scanner(Resource):
         canvas = cv2.bitwise_not(canvas)
         canvas = cv2.cvtColor(canvas, cv2.COLOR_GRAY2RGB)
         return canvas
-    def post(self):
+    def post(self, image = None):
         if 'image' not in request.files:
             response = {
                 'error' : 'no image found'
