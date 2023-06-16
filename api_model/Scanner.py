@@ -4,7 +4,8 @@ import cv2
 import numpy as np
 from tensorflow import keras
 from numpy import asarray
-
+import datetime
+import os
 # self defined
 import api_model.BaksaraConst as Baksara
 # import BaksaraConst as Baksara
@@ -391,19 +392,35 @@ class Scanner(Resource):
             }
             return response
         file = request.files['image']
-
-        gray_image = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_GRAYSCALE)
-
-        bottom = 80
-        top = 255
-
-        _, binary_image = cv2.threshold(gray_image, bottom, top, cv2.THRESH_BINARY)
-        image = binary_image
-        image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
-
         
-        segmentation_result = None
+        image = None
+        try:
+            time_now = datetime.datetime.now()
+            # Format tanggal
+            date = time_now.strftime("%d-%m-%Y")
+            # Format jam, menit, dan detik
+            time = time_now.strftime("%H-%M-%S")
 
+            # Menggabungkan tanggal dan waktu
+            current_time = date + "_" + time
+            gray_image = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_GRAYSCALE)
+            
+            save = "./test"
+            if not os.path.exists(save):
+                os.makedirs(save)
+            cv2.imwrite(f"{save}/img_{current_time}.jpg", gray_image)
+            bottom = 80
+            top = 255
+
+            _, binary_image = cv2.threshold(gray_image, bottom, top, cv2.THRESH_BINARY)
+            image = binary_image
+            image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            response = { "error": f"Image undetected :: {str(e)}" }
+            return response
+
+        segmentation_result = None
         try:
             segmentation_result = self.segmentation(image)
         except Exception as e:
