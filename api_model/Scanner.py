@@ -14,7 +14,16 @@ class Scanner(Resource):
     def __init__(self):
         self.MODEL = Baksara.MODEL
         self.CLASS_NAMES = Baksara.CLASS_NAMES
-# Dilation Function
+    # Dilation Function
+    def begining_resize(self, image=None, h_desired=276):
+        im_h = image.shape[0]
+        im_w = image.shape[1]
+        aspect_ratio = h_desired / im_h
+        new_h = int(aspect_ratio * im_h)
+        new_w = int(aspect_ratio * im_w)
+        # Resize the image
+        resized_image = cv2.resize(image, (new_w, new_h))
+        return resized_image
     def dilate_image(self, image, kernel_size):
         # Set the kernel size and sigma
         sigma = 1.5
@@ -141,6 +150,7 @@ class Scanner(Resource):
         h1_regions = len(h1_segmentation)
         v1_segmentation = []
         for image in h1_segmentation:
+            image = self.begining_resize(image = image, h_desired = 276)
             temp_im = self.vertical_pp(image)
             temp_im = [region for region in temp_im if np.sum(region) > 0]
             v1_segmentation.append(temp_im)
