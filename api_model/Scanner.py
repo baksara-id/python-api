@@ -148,7 +148,7 @@ class Scanner(Resource):
         # SECOND HORIZONTAL PP
         v1_regions = len(v1_segmentation)
         h2_segmentation = []
-        tebal_px = 20
+        tebal_px = 19
         h2_treshold = int(255 * tebal_px)
 
         for i in range(v1_regions):
