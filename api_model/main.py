@@ -6,7 +6,7 @@ from tensorflow import keras
 from numpy import asarray
 # self lib
 
-
+from api_model.LandingPage import LandingPage
 from api_model.Kelas import Kelas
 from api_model.Scanner import Scanner
 
@@ -18,6 +18,7 @@ app = Flask(__name__)
 api = Api(app)
 
 # Api endpoints
+api.add_resource(LandingPage, "/")
 api.add_resource(Scanner, "/scanner")
 api.add_resource(Kelas, "/kelas")
 
