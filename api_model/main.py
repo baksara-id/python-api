@@ -25,4 +25,4 @@ api.add_resource(Kelas, "/kelas")
 # Start server
 PORT = 8080
 if __name__ == '__main__':
-    app.run(debug = True, host='0.0.0.0', port=PORT)
+    app.run(debug = False, host='0.0.0.0', port=PORT)
