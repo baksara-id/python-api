@@ -4,8 +4,7 @@ import cv2
 import numpy as np
 from tensorflow import keras
 from numpy import asarray
-import datetime
-import os
+
 # self defined
 import api_model.BaksaraConst as Baksara
 # import BaksaraConst as Baksara
@@ -395,20 +394,8 @@ class Scanner(Resource):
         
         image = None
         try:
-            time_now = datetime.datetime.now()
-            # Format tanggal
-            date = time_now.strftime("%d-%m-%Y")
-            # Format jam, menit, dan detik
-            time = time_now.strftime("%H-%M-%S")
-
-            # Menggabungkan tanggal dan waktu
-            current_time = date + "_" + time
             gray_image = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_GRAYSCALE)
             
-            save = "./test"
-            if not os.path.exists(save):
-                os.makedirs(save)
-            cv2.imwrite(f"{save}/img_{current_time}.jpg", gray_image)
             bottom = 80
             top = 255
 
