@@ -5,7 +5,7 @@ steps:
       [
         'build',
         '-t',
-        'asia-southeast2-docker.pkg.dev/testing-baksara/python-api/python-api',
+        'asia-southeast1-docker.pkg.dev/baksara-official/ml-api/ml-api-image',
         '.',
       ]
 
@@ -14,12 +14,12 @@ steps:
     args:
       [
         'push',
-        'asia-southeast2-docker.pkg.dev/testing-baksara/python-api/python-api',
+        'asia-southeast1-docker.pkg.dev/baksara-official/ml-api/ml-api-image',
       ]
 
   # Configure Docker for Artifact Registry using gcloud
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['auth', 'configure-docker', 'asia-southeast2-docker.pkg.dev']
+    args: ['auth', 'configure-docker', 'asia-southeastq-docker.pkg.dev']
 
   # Deploy to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
@@ -29,11 +29,11 @@ steps:
         'deploy',
         'python-api',
         '--image',
-        'asia-southeast2-docker.pkg.dev/testing-baksara/python-api/python-api',
+        'asia-southeast1-docker.pkg.dev/baksara-official/ml-api/ml-api-image',
         '--platform',
         'managed',
         '--region',
-        'asia-southeast2',
+        'asia-southeast1',
       ]
 options:
   logging: CLOUD_LOGGING_ONLY
