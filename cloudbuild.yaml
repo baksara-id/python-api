@@ -35,3 +35,5 @@ steps:
         '--region',
         'asia-southeast2',
       ]
+options:
+  logging: CLOUD_LOGGING_ONLY
